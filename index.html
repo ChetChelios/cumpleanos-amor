@@ -289,6 +289,121 @@
       50% { opacity: 1; }
     }
 
+    /* Lightbox para ver fotos */
+    .lightbox {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.95);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .lightbox.active {
+      display: flex;
+    }
+
+    .lightbox-content {
+      max-width: 90%;
+      max-height: 80%;
+      text-align: center;
+      animation: zoomIn 0.4s ease;
+    }
+
+    @keyframes zoomIn {
+      from {
+        transform: scale(0.8);
+        opacity: 0;
+      }
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    .lightbox-content img {
+      max-width: 100%;
+      max-height: 70vh;
+      object-fit: contain;
+      border-radius: 15px;
+      box-shadow: 0 0 50px rgba(102, 126, 234, 0.5);
+    }
+
+    .lightbox-message {
+      margin-top: 20px;
+      font-size: 1.3rem;
+      color: #fff;
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.3), rgba(118, 75, 162, 0.3));
+      padding: 20px 30px;
+      border-radius: 15px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      max-width: 600px;
+      margin: 20px auto;
+      line-height: 1.6;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    }
+
+    .lightbox-close {
+      position: absolute;
+      top: 30px;
+      right: 40px;
+      font-size: 40px;
+      color: #fff;
+      cursor: pointer;
+      background: rgba(255, 255, 255, 0.1);
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .lightbox-close:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: rotate(90deg);
+    }
+
+    .lightbox-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 50px;
+      color: #fff;
+      cursor: pointer;
+      background: rgba(255, 255, 255, 0.1);
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      user-select: none;
+    }
+
+    .lightbox-nav:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-50%) scale(1.1);
+    }
+
+    .lightbox-prev {
+      left: 30px;
+    }
+
+    .lightbox-next {
+      right: 30px;
+    }
+
     /* Responsive */
     @media (max-width: 768px) {
       .galeria {
@@ -299,6 +414,34 @@
       .btn-musica, .btn-descarga {
         padding: 12px 25px;
         font-size: 1rem;
+      }
+
+      .lightbox-close {
+        top: 15px;
+        right: 15px;
+        font-size: 30px;
+        width: 40px;
+        height: 40px;
+      }
+
+      .lightbox-nav {
+        font-size: 35px;
+        width: 45px;
+        height: 45px;
+      }
+
+      .lightbox-prev {
+        left: 10px;
+      }
+
+      .lightbox-next {
+        right: 10px;
+      }
+
+      .lightbox-message {
+        font-size: 1.1rem;
+        padding: 15px 20px;
+        margin: 15px 10px;
       }
     }
   </style>
@@ -320,52 +463,187 @@
     </p>
 
     <div class="controles">
-      <button class="btn-musica" onclick="reproducirMusica()">🔊 Reproducir Música</button>
-      <button class="btn-descarga" onclick="mostrarMensajeDescarga()">📥 Descargar Paquete de Amor</button>
+      <button class="btn-musica" onclick="toggleMusica()">🔊 Pausar Música</button>
+      <button class="btn-descarga" onclick="descargarPaquete()">📥 Descargar Paquete de Amor</button>
       <p class="mensaje-descarga" id="mensaje">¡Descárgate el paquete de recursos de tu amor, ahora su corazón es aún más tuyo 💙🌟💎!</p>
     </div>
 
-    <audio id="musica" loop>
+    <audio id="musica" loop autoplay>
       <source src="coldplay.mp3" type="audio/mpeg">
     </audio>
 
     <div class="galeria">
-      <div class="galeria-item"><img src="foto1.jpg" alt="Recuerdo 1"></div>
-      <div class="galeria-item"><img src="foto2.jpg" alt="Recuerdo 2"></div>
-      <div class="galeria-item"><img src="foto3.jpg" alt="Recuerdo 3"></div>
-      <div class="galeria-item"><img src="foto4.jpg" alt="Recuerdo 4"></div>
-      <div class="galeria-item"><img src="foto5.jpg" alt="Recuerdo 5"></div>
-      <div class="galeria-item"><img src="foto6.jpg" alt="Recuerdo 6"></div>
-      <div class="galeria-item"><img src="foto7.jpg" alt="Recuerdo 7"></div>
-      <div class="galeria-item"><img src="foto8.jpg" alt="Recuerdo 8"></div>
-      <div class="galeria-item"><img src="foto9.jpg" alt="Recuerdo 9"></div>
-      <div class="galeria-item"><img src="foto10.jpg" alt="Recuerdo 10"></div>
-      <div class="galeria-item"><img src="foto11.jpg" alt="Recuerdo 11"></div>
-      <div class="galeria-item"><img src="foto12.jpg" alt="Recuerdo 12"></div>
-      <div class="galeria-item"><img src="foto13.jpg" alt="Recuerdo 13"></div>
-      <div class="galeria-item"><img src="foto14.jpg" alt="Recuerdo 14"></div>
-      <div class="galeria-item"><img src="foto15.jpg" alt="Recuerdo 15"></div>
+      <div class="galeria-item" onclick="abrirFoto(0)"><img src="foto1.jpg.jpeg" alt="Recuerdo 1"></div>
+      <div class="galeria-item" onclick="abrirFoto(1)"><img src="foto2.jpg.jpeg" alt="Recuerdo 2"></div>
+      <div class="galeria-item" onclick="abrirFoto(2)"><img src="foto3.jpg.jpeg" alt="Recuerdo 3"></div>
+      <div class="galeria-item" onclick="abrirFoto(3)"><img src="foto4.jpg.jpeg" alt="Recuerdo 4"></div>
+      <div class="galeria-item" onclick="abrirFoto(4)"><img src="foto5.jpg.jpeg" alt="Recuerdo 5"></div>
+      <div class="galeria-item" onclick="abrirFoto(5)"><img src="foto6.jpg.jpeg" alt="Recuerdo 6"></div>
+      <div class="galeria-item" onclick="abrirFoto(6)"><img src="foto7.jpg.jpeg" alt="Recuerdo 7"></div>
+      <div class="galeria-item" onclick="abrirFoto(7)"><img src="foto8.jpg.jpeg" alt="Recuerdo 8"></div>
+      <div class="galeria-item" onclick="abrirFoto(8)"><img src="foto9.jpg.jpeg" alt="Recuerdo 9"></div>
+      <div class="galeria-item" onclick="abrirFoto(9)"><img src="foto10.jpg.jpeg" alt="Recuerdo 10"></div>
+      <div class="galeria-item" onclick="abrirFoto(10)"><img src="foto11.jpg.jpeg" alt="Recuerdo 11"></div>
+      <div class="galeria-item" onclick="abrirFoto(11)"><img src="foto12.jpg.jpeg" alt="Recuerdo 12"></div>
+      <div class="galeria-item" onclick="abrirFoto(12)"><img src="foto13.jpg.jpeg" alt="Recuerdo 13"></div>
+      <div class="galeria-item" onclick="abrirFoto(13)"><img src="foto14.jpg.jpeg" alt="Recuerdo 14"></div>
+      <div class="galeria-item" onclick="abrirFoto(14)"><img src="foto15.jpg.jpeg" alt="Recuerdo 15"></div>
     </div>
   </div>
 
+  <!-- Lightbox para ver fotos -->
+  <div class="lightbox" id="lightbox">
+    <span class="lightbox-close" onclick="cerrarLightbox()">×</span>
+    <span class="lightbox-nav lightbox-prev" onclick="cambiarFoto(-1)">‹</span>
+    <div class="lightbox-content">
+      <img id="lightbox-img" src="" alt="">
+      <div class="lightbox-message" id="lightbox-message"></div>
+    </div>
+    <span class="lightbox-nav lightbox-next" onclick="cambiarFoto(1)">›</span>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
   <script>
-    // Función para reproducir música
-    function reproducirMusica() {
+    // Mensajes personalizados para cada foto
+    const mensajes = [
+      "Este momento captura la esencia de tu belleza y alegría 💙✨",
+      "Cada vez que te miro, me enamoro más de ti 💕",
+      "Tu sonrisa ilumina hasta mis días más oscuros 🌟",
+      "Eres el mejor regalo que la vida me ha dado 🎁💙",
+      "En tus ojos encuentro mi hogar y mi paz 🏡💫",
+      "Contigo cada momento se convierte en un recuerdo eterno 📸💕",
+      "Tu felicidad es mi felicidad, tu amor es mi fuerza 💪💙",
+      "Gracias por existir y por elegirme cada día 🌹✨",
+      "Eres mi persona favorita en todo el universo 🌌💙",
+      "Este recuerdo me recuerda por qué te amo tanto 💕🎈",
+      "Tu risa es la melodía más hermosa que existe 🎵💙",
+      "Juntos hemos creado los momentos más perfectos 🥰✨",
+      "Eres mi sueño hecho realidad 💭💙",
+      "Cada día a tu lado es una nueva aventura 🚀💕",
+      "Te amo más de lo que las palabras pueden expresar 💙🌟"
+    ];
+
+    let fotoActual = 0;
+
+    // Auto-reproducir música al cargar la página
+    window.addEventListener('load', () => {
       const musica = document.getElementById('musica');
+      musica.play().catch(error => {
+        console.log('Autoplay bloqueado, necesita interacción del usuario');
+      });
+    });
+
+    // Función para pausar/reproducir música
+    function toggleMusica() {
+      const musica = document.getElementById('musica');
+      const btn = document.querySelector('.btn-musica');
+      
       if (musica.paused) {
         musica.play();
+        btn.textContent = '🔊 Pausar Música';
       } else {
         musica.pause();
+        btn.textContent = '▶️ Reproducir Música';
       }
     }
 
-    // Función para mostrar mensaje de descarga
-    function mostrarMensajeDescarga() {
+    // Función para abrir foto en lightbox
+    function abrirFoto(index) {
+      fotoActual = index;
+      const lightbox = document.getElementById('lightbox');
+      const img = document.getElementById('lightbox-img');
+      const mensaje = document.getElementById('lightbox-message');
+      
+      img.src = `foto${index + 1}.jpeg`;
+      mensaje.textContent = mensajes[index];
+      lightbox.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    // Función para cerrar lightbox
+    function cerrarLightbox() {
+      const lightbox = document.getElementById('lightbox');
+      lightbox.classList.remove('active');
+      document.body.style.overflow = 'auto';
+    }
+
+    // Función para cambiar de foto
+    function cambiarFoto(direccion) {
+      fotoActual += direccion;
+      if (fotoActual < 0) fotoActual = 14;
+      if (fotoActual > 14) fotoActual = 0;
+      
+      const img = document.getElementById('lightbox-img');
+      const mensaje = document.getElementById('lightbox-message');
+      
+      img.src = `foto${fotoActual + 1}.jpeg`;
+      mensaje.textContent = mensajes[fotoActual];
+    }
+
+    // Cerrar con la tecla Escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') cerrarLightbox();
+      if (e.key === 'ArrowLeft') cambiarFoto(-1);
+      if (e.key === 'ArrowRight') cambiarFoto(1);
+    });
+
+    // Función para descargar todas las fotos en un ZIP
+    async function descargarPaquete() {
       const mensaje = document.getElementById('mensaje');
+      mensaje.textContent = '📦 Preparando tu paquete de amor...';
       mensaje.classList.add('show');
-      setTimeout(() => {
-        mensaje.classList.remove('show');
-      }, 5000);
+
+      try {
+        const zip = new JSZip();
+        const folder = zip.folder("Paquete_De_Amor");
+
+        // Lista de todas las fotos (ahora en .jpeg)
+        const fotos = [
+          'foto1.jpeg', 'foto2.jpeg', 'foto3.jpeg', 'foto4.jpeg', 'foto5.jpeg',
+          'foto6.jpeg', 'foto7.jpeg', 'foto8.jpeg', 'foto9.jpeg', 'foto10.jpeg',
+          'foto11.jpeg', 'foto12.jpeg', 'foto13.jpeg', 'foto14.jpeg', 'foto15.jpeg'
+        ];
+
+        // Descargar cada foto y agregarla al ZIP
+        for (let i = 0; i < fotos.length; i++) {
+          try {
+            const response = await fetch(fotos[i]);
+            const blob = await response.blob();
+            folder.file(fotos[i], blob);
+          } catch (error) {
+            console.error(`Error al cargar ${fotos[i]}:`, error);
+          }
+        }
+
+        // Agregar también la música
+        try {
+          const musicResponse = await fetch('coldplay.mp3');
+          const musicBlob = await musicResponse.blob();
+          folder.file('coldplay.mp3', musicBlob);
+        } catch (error) {
+          console.error('Error al cargar la música:', error);
+        }
+
+        // Generar el ZIP y descargarlo
+        const content = await zip.generateAsync({type: 'blob'});
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(content);
+        link.download = 'Paquete_De_Amor.zip';
+        link.click();
+
+        mensaje.textContent = '¡Descárgate el paquete de recursos de tu amor, ahora su corazón es aún más tuyo 💙🌟💎!';
+        
+        setTimeout(() => {
+          mensaje.classList.remove('show');
+        }, 5000);
+
+      } catch (error) {
+        console.error('Error al crear el paquete:', error);
+        mensaje.textContent = '❌ Error al crear el paquete. Intenta de nuevo.';
+        setTimeout(() => {
+          mensaje.classList.remove('show');
+        }, 3000);
+      }
     }
 
     // Crear estrellas
