@@ -289,6 +289,65 @@
       50% { opacity: 1; }
     }
 
+    /* Botón de inicio */
+    .inicio-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      animation: fadeIn 0.5s ease;
+    }
+
+    .inicio-overlay.hidden {
+      display: none;
+    }
+
+    .inicio-content {
+      text-align: center;
+      padding: 40px;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 30px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    .inicio-content h2 {
+      font-size: 2.5rem;
+      color: #fff;
+      margin-bottom: 30px;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .btn-inicio {
+      background: #fff;
+      color: #667eea;
+      border: none;
+      padding: 20px 50px;
+      font-size: 1.5rem;
+      font-weight: bold;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .btn-inicio:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+    }
+
     /* Lightbox para ver fotos */
     .lightbox {
       display: none;
@@ -447,6 +506,14 @@
   </style>
 </head>
 <body>
+  <!-- Pantalla de inicio para activar audio -->
+  <div class="inicio-overlay" id="inicioOverlay">
+    <div class="inicio-content">
+      <h2>💙 Feliz Cumpleaños Mi Amor 💙</h2>
+      <button class="btn-inicio" onclick="iniciarExperiencia()">🎉 Abrir Regalo 🎁</button>
+    </div>
+  </div>
+
   <!-- Estrellas de fondo -->
   <div class="stars" id="stars"></div>
 
@@ -468,7 +535,7 @@
       <p class="mensaje-descarga" id="mensaje">¡Descárgate el paquete de recursos de tu amor, ahora su corazón es aún más tuyo 💙🌟💎!</p>
     </div>
 
-    <audio id="musica" loop autoplay>
+    <audio id="musica" loop preload="auto">
       <source src="coldplay.mp3" type="audio/mpeg">
     </audio>
 
@@ -525,13 +592,29 @@
 
     let fotoActual = 0;
 
-    // Auto-reproducir música al cargar la página
-    window.addEventListener('load', () => {
+    // Función para iniciar la experiencia
+    function iniciarExperiencia() {
+      const overlay = document.getElementById('inicioOverlay');
       const musica = document.getElementById('musica');
-      musica.play().catch(error => {
-        console.log('Autoplay bloqueado, necesita interacción del usuario');
+      
+      // Ocultar overlay
+      overlay.classList.add('hidden');
+      
+      // Reproducir música
+      musica.play().then(() => {
+        console.log('Música reproduciéndose');
+      }).catch(error => {
+        console.log('Error al reproducir música:', error);
+        // Intentar de nuevo después de un segundo
+        setTimeout(() => {
+          musica.play();
+        }, 1000);
       });
-    });
+
+      // Iniciar animaciones
+      createStars();
+      createHearts();
+    }
 
     // Función para pausar/reproducir música
     function toggleMusica() {
@@ -554,7 +637,7 @@
       const img = document.getElementById('lightbox-img');
       const mensaje = document.getElementById('lightbox-message');
       
-      img.src = `foto${index + 1}.jpeg`;
+      img.src = `foto${index + 1}.jpg.jpeg`;
       mensaje.textContent = mensajes[index];
       lightbox.classList.add('active');
       document.body.style.overflow = 'hidden';
@@ -576,7 +659,7 @@
       const img = document.getElementById('lightbox-img');
       const mensaje = document.getElementById('lightbox-message');
       
-      img.src = `foto${fotoActual + 1}.jpeg`;
+      img.src = `foto${fotoActual + 1}.jpg.jpeg`;
       mensaje.textContent = mensajes[fotoActual];
     }
 
@@ -597,11 +680,11 @@
         const zip = new JSZip();
         const folder = zip.folder("Paquete_De_Amor");
 
-        // Lista de todas las fotos (ahora en .jpeg)
+        // Lista de todas las fotos (con extensión .jpg.jpeg)
         const fotos = [
-          'foto1.jpeg', 'foto2.jpeg', 'foto3.jpeg', 'foto4.jpeg', 'foto5.jpeg',
-          'foto6.jpeg', 'foto7.jpeg', 'foto8.jpeg', 'foto9.jpeg', 'foto10.jpeg',
-          'foto11.jpeg', 'foto12.jpeg', 'foto13.jpeg', 'foto14.jpeg', 'foto15.jpeg'
+          'foto1.jpg.jpeg', 'foto2.jpg.jpeg', 'foto3.jpg.jpeg', 'foto4.jpg.jpeg', 'foto5.jpg.jpeg',
+          'foto6.jpg.jpeg', 'foto7.jpg.jpeg', 'foto8.jpg.jpeg', 'foto9.jpg.jpeg', 'foto10.jpg.jpeg',
+          'foto11.jpg.jpeg', 'foto12.jpg.jpeg', 'foto13.jpg.jpeg', 'foto14.jpg.jpeg', 'foto15.jpg.jpeg'
         ];
 
         // Descargar cada foto y agregarla al ZIP
@@ -649,6 +732,7 @@
     // Crear estrellas
     function createStars() {
       const starsContainer = document.getElementById('stars');
+      starsContainer.innerHTML = ''; // Limpiar estrellas anteriores
       for (let i = 0; i < 100; i++) {
         const star = document.createElement('div');
         star.className = 'star';
@@ -677,10 +761,6 @@
         }, 8000);
       }, 800);
     }
-
-    // Inicializar animaciones
-    createStars();
-    createHearts();
   </script>
 </body>
 </html>
